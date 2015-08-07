@@ -40,9 +40,11 @@ class WPImportController extends AdminModuleController {
 
         if ($this->submit_button->has_been_submited() && $this->form->validate()) {
             $importer = array();
-            if($this->form->get_field_by_id('importer_User')->get_value()) $importer[] = 'User';
-            if($this->form->get_field_by_id('importer_Cat')->get_value()) $importer[] = 'Cat';
-            if($this->form->get_field_by_id('importer_Article')->get_value()) $importer[] = 'Article';
+            $listImporter = self::listImporters();
+
+            foreach($listImporter as $i) {
+                if($this->form->get_field_by_id('importer_' . $i['name'])->get_value()) $importer[] = $i['name'];
+            }
 
             session_start();
             $_SESSION['wpimport'] = array(
