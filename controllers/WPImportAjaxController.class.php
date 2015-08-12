@@ -19,12 +19,14 @@ class WPImportAjaxController extends AdminController {
         define('DEFAULT_AUTHOR_ID', $data['user_id']);
 
         ini_set('max_execution_time', 0);
+        if(function_exists('xdebug_disable')) {
+            xdebug_disable();
+        }
         ob_start();
         echo 'Start import : ' . date('H:i:s') . PHP_EOL;
         echo '-----' . PHP_EOL . PHP_EOL;
 
-        require_once __DIR__ . '/../WP2PhpBoost/wp2phpboost.php';
-
+        $success = require_once __DIR__ . '/../WP2PhpBoost/wp2phpboost.php';
         echo 'Clean cache...' . PHP_EOL;
         AppContext::get_cache_service()->clear_cache();
         echo PHP_EOL . PHP_EOL;
@@ -33,7 +35,7 @@ class WPImportAjaxController extends AdminController {
         $logs= ob_get_clean();
 
         return new JSONResponse(array(
-            'success' => true,
+            'success' => $success,
             'logs' => utf8_decode($logs)
         ));
     }

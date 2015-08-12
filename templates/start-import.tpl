@@ -29,9 +29,17 @@
         $('.import-logs').hide();
 
         $.ajax({
-            dataType: "json",
+            dataType: "text",
             url: '{AJAX_IMPORT_URL}',
             success: function(data) {
+                try {
+                    data = $.parseJSON(data);
+                } catch (e) {
+                    data = {
+                        'success': false,
+                        'logs': data
+                    };
+                }
                 $('.import-duration img').hide();
                 $('.import-duration .import-start').hide();
                 $('.import-duration .import-end').show();
